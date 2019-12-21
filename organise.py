@@ -6,6 +6,7 @@ from tkinter import *
 from tkinter.ttk import *
 from functools import partial
 tk=Tk()
+tk.resizable(False, False)
 progress=Progressbar(tk,orient=HORIZONTAL,length=100,mode='determinate')
 def organise(dire, file_end):
 	files = []
@@ -27,18 +28,31 @@ def organise(dire, file_end):
 		new_file = os.path.join(modd + file_end)
 	
 		os.rename(old_file, new_file)
-		progress["value"] = int((file[0]/len(files))*100)
-		progress.pack()
-	t.insert(END, "\nDone!")  
-	btn.pack_forget()
+		progress["value"] = int((file[0]+1/len(files)-1)*100)
+		progress.grid(row=0,column=1,columnspan=1)
+	#t.insert(END, "\nDone!")  
+	btn.grid_forget()
 
 # TKINTER window
-dire = askdirectory(title='Select the folder where your files are stored')
-progress.pack()
-command = partial(organise, dire, ".jpg")
-btn = Button(tk,text='Start',command=command)
-btn.pack()
-t = Text()
-t.insert(INSERT, "Selected Directory: "+dire)
-t.pack()
+global dire
+dire = ""
+# render progress bar
+progress.grid(row=0,column=1,columnspan=1)
+# init partial so that tart button works
+start = partial(organise, dire, ".jpg")
+# Create and render start button
+btn = Button(text='Start',command=start)
+btn.grid(row=0,column=0)
+#btn.grid()
+# functionn to declare the file path and load it into imformation box
+def askdir():
+	dire = askdirectory(title='Select the folder where your files are stored')
+	t.insert(END, dire)
+# create and render the button to choose directory
+askdirebtn = Button(text="Select Directory", command=askdir)
+askdirebtn.grid(row=1,column=0)
+t = Text(width=50, height=2)
+t.insert(INSERT, "Selected Directory: ")
+t.grid(row=1,column=1, columnspan=1)
+
 mainloop()
