@@ -28,7 +28,7 @@ def organise(dire, file_end):
 		new_file = os.path.join(modd + file_end)
 	
 		os.rename(old_file, new_file)
-		progress["value"] = int((file[0]+1/len(files)-1)*100)
+		progress["value"] = int((file[0]+1/len(files))*100)
 		progress.grid(row=0,column=1,columnspan=1)
 	#t.insert(END, "\nDone!")  
 	btn.grid_forget()
@@ -39,18 +39,24 @@ dire = ""
 # render progress bar
 progress.grid(row=0,column=1,columnspan=1)
 # init partial so that tart button works
-start = partial(organise, dire, ".jpg")
-# Create and render start button
-btn = Button(text='Start',command=start)
-btn.grid(row=0,column=0)
-#btn.grid()
 # functionn to declare the file path and load it into imformation box
+global btn
+btn = Button(text='Start')
 def askdir():
 	dire = askdirectory(title='Select the folder where your files are stored')
+	print(dire)
+	btn = Button(text='Start',command=lambda: organise(dire, ".jpg"))
+	btn.grid(row=0,column=0)
 	t.insert(END, dire)
+	#start = partial(organise, dire, ".jpg")
 # create and render the button to choose directory
 askdirebtn = Button(text="Select Directory", command=askdir)
 askdirebtn.grid(row=1,column=0)
+# start = partial(organise, dire, ".jpg")
+# Create and render start button
+
+#btn.grid()
+
 t = Text(width=50, height=2)
 t.insert(INSERT, "Selected Directory: ")
 t.grid(row=1,column=1, columnspan=1)
